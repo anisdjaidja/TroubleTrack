@@ -11,7 +11,6 @@ namespace TroubleTrack.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        ObservableCollection<Project> Database = new TestSeed().Projects;
         ProjectsService _service;
 
         private readonly ILogger<ProjectController> _logger;
@@ -61,19 +60,19 @@ namespace TroubleTrack.Controllers
         [HttpPut(template: "{projectID}/errors/{errorID}")]
         public ActionResult Put(int projectID, int errorID, [FromBody] BugReport updatedBug)
         {
-            if(updatedBug == null) 
-                return BadRequest($"Please specify a valid bugReport, check documentation for the valid format");
+            //if(updatedBug == null) 
+            //    return BadRequest($"Please specify a valid bugReport, check documentation for the valid format");
             
-            var errorPool = Database.Where(p => p.ID == projectID).FirstOrDefault()?.Errors;
-            if (errorPool == null)
-                return BadRequest($"No project with the identifier {projectID}");
+            //var errorPool = Database.Where(p => p.ID == projectID).FirstOrDefault()?.Errors;
+            //if (errorPool == null)
+            //    return BadRequest($"No project with the identifier {projectID}");
 
-            var error = errorPool.Where(e => e.ID == errorID).FirstOrDefault();
-            if (error == null)
-                return BadRequest($"No error with the identifier {errorID}");
+            //var error = errorPool.Where(e => e.ID == errorID).FirstOrDefault();
+            //if (error == null)
+            //    return BadRequest($"No error with the identifier {errorID}");
 
-            errorPool.Remove(error);
-            errorPool.Add(updatedBug);
+            //errorPool.Remove(error);
+            //errorPool.Add(updatedBug);
             return Ok($"error {updatedBug.BugName} status updated");
         }
 
