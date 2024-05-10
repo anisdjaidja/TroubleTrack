@@ -1,0 +1,6 @@
+@TroubleTrack_HostAddress = http://localhost:5150
+
+GET {{TroubleTrack_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
