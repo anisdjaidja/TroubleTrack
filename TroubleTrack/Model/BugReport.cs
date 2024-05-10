@@ -1,4 +1,6 @@
-﻿namespace TroubleTrack.Model
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace TroubleTrack.Model
 {
     public class BugReport
     {
@@ -6,7 +8,7 @@
         {
             Changelog = new();
         }
-
+        [BsonId]
         public int ID { get; set; }
 
         public int ProjectID { get; set; }

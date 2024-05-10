@@ -1,14 +1,15 @@
 using TroubleTrack.Database;
+using TroubleTrack.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+builder.Services.AddSingleton<MongoDatabase>();
+builder.Services.AddSingleton<ProjectsService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<TestSeed>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
