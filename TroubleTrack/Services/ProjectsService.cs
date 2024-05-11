@@ -88,7 +88,7 @@ namespace TroubleTrack.Services
             {
                 var project = await GetProjectByID(projectID);
                 int? maxid = project.Errors.Max(br => (int?)br.ID);
-                int newID = maxid ?? 1;
+                int newID = maxid ?? -1;
                 report.ID = newID + 1;
                 report.ProjectID = projectID;
                 project.Errors.Add(report);
@@ -101,7 +101,7 @@ namespace TroubleTrack.Services
             }
         }
 
-        public async Task<Project?> DELETE(int projectID, int errorID)
+        public async Task<Project?> DELETE_ERROR(int projectID, int errorID)
         {
             var filter = Builders<Project>
             .Filter
@@ -117,6 +117,24 @@ namespace TroubleTrack.Services
             try
             {
                 return await ProjectCollection.FindOneAndUpdateAsync(filter, update);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<BugReport?> UPDATE_ERROR(int projectID, int errorID, BugReport report)
+        {
+            //ensure correct id's when updating
+            report.ID = errorID;
+            report.ProjectID = projectID;
+
+            try
+            {
+                if (await DELETE_ERROR(projectID, errorID) == null)
+                    return null;
+                return await INSERT_ERROR(projectID, report);
             }
             catch
             {

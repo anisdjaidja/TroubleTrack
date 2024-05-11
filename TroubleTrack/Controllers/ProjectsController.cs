@@ -1,49 +1,75 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using TroubleTrack.Database;
 using TroubleTrack.Model;
 using TroubleTrack.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace TroubleTrack.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectController : ControllerBase
+    public class ProjectsController : ControllerBase
     {
         ProjectsService _service;
 
-        private readonly ILogger<ProjectController> _logger;
+        private readonly ILogger<ProjectsController> _logger;
 
-        public ProjectController(ILogger<ProjectController> logger, ProjectsService projectsService)
+        public ProjectsController(ILogger<ProjectsController> logger, ProjectsService projectsService)
         {
             _logger = logger;
             _service = projectsService;
         }
 
-        // GET: api/Project
+        // Get Platform wide statistics:
+        // Get project statistics:
+        [HttpGet]
+        public StatisticsReport? GetStats()
+        {
+            var allprojects = _service.GetAllProjects().Result;
+            var allbugs = _service.GetAllErrors().Result;
+            return new StatisticsReport
+            {
+                ErrorCount = allbugs.Count,
+                AverageResolutionTime = TimeSpan.FromHours(allprojects.Average(x => x.AverageResolutionTime.TotalHours)).Duration(),
+                Critical = allbugs.Where(x => x.Severity >= 2).ToList(),
+                Major = allbugs.Where(x => x.Severity == 1).ToList(),
+                Minor = allbugs.Where(x => x.Severity <= 0).ToList(),
+            };
+        }
+
+        // Get project statistics:
+        [HttpGet(template: "{projectID}/summary")]
+        public Project? GetProjectStats(int projectID)
+        {
+            var projDocument = _service.GetProjectByID(projectID).Result;
+            if (projDocument == null)
+                return null;
+            projDocument.Errors.Clear();
+            return projDocument;
+        }
+
+        // GET all
         [HttpGet (template:"{projectID}/errors")]
         public IEnumerable<BugReport>? Get(int projectID)
         {
             return _service.GetAllErrors().Result;
         }
 
-        // GET api/<ProjectController>/5
+        // Get
         [HttpGet(template: "{projectID}/errors/{errorID}")]
         public BugReport? Get(int projectID, int errorID)
         {
            return _service.GetErrorByID(projectID, errorID).Result;
         }
-        // POST api/<ProjectController>
+        
+        // Create new project
         [HttpPost]
-        public ActionResult PostProject([FromBody] Project project)
+        public ActionResult PostProject([FromBody]string ProjectName)
         {
-            var response = _service.INSERT_PROJECT(project).Result;
+            var response = _service.INSERT_PROJECT(new Project { projectName = ProjectName }).Result;
             if (response == null)
                 return BadRequest($"Please specify a valid project, check documentation for the valid format");
             return Ok(response);
         }
-        // POST api/<ProjectController>
+
+        // Report new bug
         [HttpPost(template: "{projectID}/errors/")]
         public ActionResult Post(int projectID, [FromBody] BugReport bugReport)
         {
@@ -55,28 +81,18 @@ namespace TroubleTrack.Controllers
             return Ok(response);
         }
         
-
-        // PUT api/<ProjectController>/5
+        // update entire bug report document
         [HttpPut(template: "{projectID}/errors/{errorID}")]
         public ActionResult Put(int projectID, int errorID, [FromBody] BugReport updatedBug)
         {
-            //if(updatedBug == null) 
-            //    return BadRequest($"Please specify a valid bugReport, check documentation for the valid format");
-            
-            //var errorPool = Database.Where(p => p.ID == projectID).FirstOrDefault()?.Errors;
-            //if (errorPool == null)
-            //    return BadRequest($"No project with the identifier {projectID}");
-
-            //var error = errorPool.Where(e => e.ID == errorID).FirstOrDefault();
-            //if (error == null)
-            //    return BadRequest($"No error with the identifier {errorID}");
-
-            //errorPool.Remove(error);
-            //errorPool.Add(updatedBug);
+            var result = _service.UPDATE_ERROR(projectID, errorID, updatedBug).Result;
+            if (result == null)
+                return BadRequest($"Please specify a valid request, check documentation for the valid format, " +
+                    $"or check the project id, bugreport id");
             return Ok($"error {updatedBug.BugName} status updated");
         }
 
-        // DELETE api/<ProjectController>/5
+        // delete entire bug report document
         [HttpDelete(template: "{projectID}/errors/{errorID}")]
         public ActionResult Delete(int projectID, int errorID)
         {
@@ -84,7 +100,7 @@ namespace TroubleTrack.Controllers
                 return BadRequest($"Project with ID{projectID} doesnt exist, please specify a valid project to delete error");
 
 
-            var result = _service.DELETE(projectID, errorID).Result;
+            var result = _service.DELETE_ERROR(projectID, errorID).Result;
             if (result == null)
                 return BadRequest($"No Bug report with the identifier {errorID}");
 

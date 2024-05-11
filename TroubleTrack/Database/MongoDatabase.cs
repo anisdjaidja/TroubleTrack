@@ -6,10 +6,10 @@ namespace TroubleTrack.Database
     public class MongoDatabase
     {
         public MongoClient DBclient;
-        private readonly ILogger<ProjectController> _logger;
+        private readonly ILogger<ProjectsController> _logger;
         public bool Connected => DBclient != null;
 
-        public MongoDatabase(ILogger<ProjectController> logger) 
+        public MongoDatabase(ILogger<ProjectsController> logger) 
         {
             _logger = logger;
             ConnectToDB();

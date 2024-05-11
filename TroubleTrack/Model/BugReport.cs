@@ -4,10 +4,6 @@ namespace TroubleTrack.Model
 {
     public class BugReport
     {
-        public BugReport()
-        {
-            Changelog = new();
-        }
         [BsonId]
         public int ID { get; set; }
 
@@ -17,12 +13,17 @@ namespace TroubleTrack.Model
 
         public DateTime InitialReportDate { get; set; }
 
+        public DateTime? ResolutionDate { get; set; } = null;
+
+        public TimeSpan? ResolutionTime => ResolutionDate - InitialReportDate;
+
         public string Type { get; set; }
+
+        public int Severity { get; set; } = 0;
 
         public string? Summary { get; set; }
 
-        public List<string> Changelog { get; set; }
+        public bool IsFixed { get; set;}
 
-        public bool IsFixed { get; set; }
     }
 }
