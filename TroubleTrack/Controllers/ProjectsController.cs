@@ -41,7 +41,7 @@ namespace TroubleTrack.Controllers
             var projDocument = _service.GetProjectByID(projectID).Result;
             if (projDocument == null)
                 return null;
-            projDocument.Errors.Clear();
+
             return projDocument;
         }
 
@@ -75,6 +75,7 @@ namespace TroubleTrack.Controllers
         {
             if(_service.GetProjectByID(projectID).Result == null)
                 return BadRequest($"Project with ID{projectID} doesnt exist, please specify a valid project to report error");
+            bugReport.ResolutionDate = null;
             var response = _service.INSERT_ERROR(projectID, bugReport).Result;
             if (response == null)
                 return BadRequest($"Please specify a valid BugReport, check documentation for the valid format");

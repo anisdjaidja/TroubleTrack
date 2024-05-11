@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using TroubleTrack.Database;
 using TroubleTrack.Services;
 
@@ -8,7 +9,10 @@ builder.Services.AddSingleton<ProjectsService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+});
 
 var app = builder.Build();
 

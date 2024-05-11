@@ -1,8 +1,4 @@
 ﻿using MongoDB.Driver;
-using System.Net;
-using System.Numerics;
-using System.Security.Cryptography;
-using System.Xml.Linq;
 using TroubleTrack.Database;
 using TroubleTrack.Model;
 
@@ -74,7 +70,7 @@ namespace TroubleTrack.Services
                 return null;
             }
         }
-        public async Task<BugReport?> INSERT_ERROR(int projectID, BugReport report)
+        public async Task<BugReport?> INSERT_ERROR(int projectID, BugReport report, int custom_id = -1)
         {
             if (report == null)
                 return null;
@@ -90,7 +86,9 @@ namespace TroubleTrack.Services
                 int? maxid = project.Errors.Max(br => (int?)br.ID);
                 int newID = maxid ?? -1;
                 report.ID = newID + 1;
+                if (custom_id > -1) { report.ID = custom_id; }
                 report.ProjectID = projectID;
+                
                 project.Errors.Add(report);
                 await ProjectCollection.FindOneAndUpdateAsync(filter, update);
                 return report;
@@ -134,7 +132,7 @@ namespace TroubleTrack.Services
             {
                 if (await DELETE_ERROR(projectID, errorID) == null)
                     return null;
-                return await INSERT_ERROR(projectID, report);
+                return await INSERT_ERROR(projectID, report, errorID);
             }
             catch
             {
