@@ -306,7 +306,7 @@ Response
 
 
 
-## Disclaimer: this is a test project and not developed with production in mind. For any further questions regarding under the hood and api architechture please contact the author.
+## Disclaimer: this is a test project and not developed with production in mind. Functionalities (even thought very simple) has not been tested by TDD, For any further questions regarding under the hood and api architechture please contact the author.
 
 # Author
 Anis Djaidja
