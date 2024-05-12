@@ -29,6 +29,14 @@ public static class DbConfig
     /// Add Adience and Issiuer strings
 }
 ```
+### Cold Start behavior
+The databse middleware in this api automatically reconnects to databse in case of downtime recovery, and subsecuently has a *Cold Start* behavior, read more :https://en.wikipedia.org/wiki/Cold_start_(computing)
+
+In this case cold start is not a problem, but rather implemented as a mechanisme to avoid unessessary uptime since this is intented to be an internal API. 
+
+![image](https://github.com/anisdjaidja/TroubleTrack/assets/58264397/bfeff13a-d52b-4b93-8803-b1149b12accc)
+
+
 
 #### Note : It is recommended to exclude the *DbConfig.cs* in the *.gitignore* file if you are forking this repo on *public*.
 
@@ -219,30 +227,83 @@ error Error 1-0 status deleted
 - These endpoints dont require authentification and can be accessed by anyone
 
 ### Get global overview ```/api/projects```
+#### Note: Error sevirity is designed to return the entire bugReport entites classified by severity. this is intended to truely help indentify most urgent errors to prioritize. Returning error count doesnt make much sense here.
 Response
 ```
 {
-    "errorCount": 2,
-    "trend": null,
-    "averageResolutionTime": "14:50:12.1870000"
+    "errorCount": 3,
+    "trend": {
+        "5/12/2024": 1,
+        "5/11/2024": 2,
+        "5/10/2024": 0,
+        "5/9/2024": 0,
+        "5/8/2024": 0
+    },
+    "critical": [
+        {
+            "id": 1,
+            "projectID": 0,
+            "bugName": "Error 0-1",
+            "initialReportDate": "2024-05-11T20:12:52.423Z",
+            "summary": "Issue with latency",
+            "type": "Performance",
+            "severity": 2,
+            "isFixed": false,
+            "resolutionDate": null,
+            "resolutionTime": null
+        }
+    ],
+    "major": [
+        {
+            "id": 0,
+            "projectID": 0,
+            "bugName": "Error 0-0",
+            "initialReportDate": "2024-05-11T00:44:22.651Z",
+            "summary": "Problem with button x",
+            "type": "Buttons",
+            "severity": 1,
+            "isFixed": true,
+            "resolutionDate": "2024-05-12T21:14:59.212Z",
+            "resolutionTime": "1.20:30:36.5610000"
+        }
+    ],
+    "minor": [
+        {
+            "id": 0,
+            "projectID": 1,
+            "bugName": "Error 1-0",
+            "initialReportDate": "2024-05-12T07:28:29.866Z",
+            "summary": "Issue with latency",
+            "type": "Performance",
+            "severity": 0,
+            "isFixed": true,
+            "resolutionDate": "2024-05-15T07:23:21.193Z",
+            "resolutionTime": "2.23:54:51.3270000"
+        }
+    ],
+    "averageResolutionTime": "1.05:06:21.9720000"
 }
 ```
-![image](https://github.com/anisdjaidja/TroubleTrack/assets/58264397/91255255-53a6-411f-ac8c-5727616aea76)
+![image](https://github.com/anisdjaidja/TroubleTrack/assets/58264397/279eebed-6440-4b48-99ba-c53dcd9a6361)
+
 
 ### Get project statistics ```/api/projects/{projectID}```
 Response
 ```
 {
-    "id": 0,
-    "projectName": "MyWebProject",
-    "averageResolutionTime": "1.20:30:36.5610000",
+    "id": 1,
+    "projectName": "MyWebProject1",
+    "averageResolutionTime": "2.23:54:51.3270000",
     "bugDistribution": {
-        "Performance": 1,
-        "Buttons": 1
-    }
+        "Performance": 1
+    },
+    "errorRate": 0,
+    "responseTime": 0,
+    "upTime": 0
 }
 ```
-![image](https://github.com/anisdjaidja/TroubleTrack/assets/58264397/74dae48f-9059-42d5-bda7-639de1e6c734)
+![image](https://github.com/anisdjaidja/TroubleTrack/assets/58264397/6a4098e3-02c9-49f4-aca9-19541d1c4f1a)
+
 
 
 ## Disclaimer: this is a test project and not developed with production in mind. For any further questions regarding under the hood and api architechture please contact the author.
