@@ -34,6 +34,13 @@ namespace TroubleTrack.Controllers
         {
             var allprojects = _service.GetAllProjects().Result;
             var allbugs = _service.GetAllErrors().Result;
+            Dictionary<string, int> TrendDict = new();
+            for (int i = 0; i < 5; i++)
+            {
+                DateTime day = DateTime.Today.AddDays(-i);
+                int count = allbugs.Where(x => x.InitialReportDate.Date == day.Date).Count();
+                TrendDict.Add(day.ToShortDateString(), count);
+            }
             return new StatisticsReport
             {
                 ErrorCount = allbugs.Count,
@@ -41,6 +48,7 @@ namespace TroubleTrack.Controllers
                 Critical = allbugs.Where(x => x.Severity >= 2).ToList(),
                 Major = allbugs.Where(x => x.Severity == 1).ToList(),
                 Minor = allbugs.Where(x => x.Severity <= 0).ToList(),
+                Trend = TrendDict
             };
         }
 

@@ -2,7 +2,7 @@
 {
     public static class DbConfig
     {
-        public  const string DbConnectionString = "mongodb+srv://tajirdev:tajirtajir0a@basictajircluster.yrgpzez.mongodb.net/";
-        public const string JwtKey = "troubletrackSecrettroubletrackSecret123";
+        public  const string DbConnectionString = "<>";
+        public const string JwtKey = "<>";
     }
 }

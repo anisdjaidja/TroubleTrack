@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Runtime.Serialization;
 
 namespace TroubleTrack.Model
@@ -27,8 +28,14 @@ namespace TroubleTrack.Model
                         result.Add(bug.Type, 1);
                 }
                 return result;
-            } 
+            }
         }
+        [SwaggerSchema(ReadOnly = true)]
+        public double ErrorRate { get; set; } = 0;
+        [SwaggerSchema(ReadOnly = true)]
+        public double ResponseTime { get; set; } = 0;
+        [SwaggerSchema(ReadOnly = true)]
+        public double UpTime { get; set; } = 0;
         #endregion
     }
 }
