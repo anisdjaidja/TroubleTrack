@@ -14,6 +14,11 @@ If you are using VS Code, install these one by one in the terminal using this co
 
 If you are Using VS Studio, make sure you have the latest .net8 release and usually your IDE would auto install the listed packages on first build.
 
+## Interface
+This API is integrated with OpenAPI specification and Swagger UI frontend.
+
+![image](https://github.com/anisdjaidja/TroubleTrack/assets/58264397/a85e0935-2956-45e5-91a0-1b001d787529)
+
 ## Database
 If you want to use MongoDB (the default databse for this api) make sure to update the *DbConfig.cs* file with the appropriate *ConnectionString*.
 In case you prefere another database, consider upgrading to *EntityFramework Core* or making your own custom middleware for your database of choice and replace *MongoDatabase.cs* file.
