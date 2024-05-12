@@ -1,24 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TroubleTrack.Model;
 using TroubleTrack.Services;
 namespace TroubleTrack.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
         ProjectsService _service;
-
+        UserService authService;
         private readonly ILogger<ProjectsController> _logger;
 
-        public ProjectsController(ILogger<ProjectsController> logger, ProjectsService projectsService)
+        public ProjectsController(ILogger<ProjectsController> logger, ProjectsService projectsService, UserService authservice)
         {
             _logger = logger;
             _service = projectsService;
+            authService = authservice;
         }
-
+        [AllowAnonymous]
+        [HttpPost(template:"Auth")]
+        public ActionResult Login([FromBody] User user)
+        {
+            var token = authService.Auth(user.Email, user.Password);
+            if (token == null)
+                return Unauthorized();
+            return Ok(new { token, user });
+        }
         // Get Platform wide statistics:
-        // Get project statistics:
         [HttpGet]
         public StatisticsReport? GetStats()
         {
