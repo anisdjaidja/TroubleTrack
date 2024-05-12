@@ -1,5 +1,37 @@
 # TroubleTrack 🐞 API DOCS 📄
 The TroubleTrack API provides tools, and resources that enable you to report, update and track errors related to frontend development of your projects.
+# Build
+To build this project on Dotnet 8 core runtime you should make sure these required dependencies are listed in the *.cproj* file:
+``` xml
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
+```
+If you are using VS Code, install these one by one in the terminal using this command ```nuget install <packageID | configFilePath> [options]```, consult officail docs : https://learn.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-install
+
+If you are Using VS Studio, make sure you have the latest .net8 release and usually your IDE would auto install the listed packages on first build.
+
+## Database
+If you want to use MongoDB (the default databse for this api) make sure to update the *DbConfig.cs* file with the appropriate *ConnectionString*.
+In case you prefere another database, consider upgrading to *EntityFramework Core* or making your own custom middleware for your database of choice and replace *MongoDatabase.cs* file.
+
+Further more, if you intende to use this on production, start by introducing AudienceKey and Issuer(Provider) string and reference them in the JWT service configuration in *program.cs* file.
+``` c#
+public static class DbConfig
+{
+    public  const string DbConnectionString = "<YOUR CONNECTION STRING HERE>";
+    public const string JwtKey = "<YOUR PRIVATE KEY HERE>";
+
+    /// for production :
+    /// Add Adience and Issiuer strings
+}
+```
+
+#### Note : It is recommended to exclude the *DbConfig.cs* in the *.gitignore* file if you are forking this repo on *public*.
+
 # Getting started
 
 - The API only responds to HTTPS-secured communications. Any requests sent via HTTP return an HTTP 301 redirect to the corresponding HTTPS resources.
