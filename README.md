@@ -1,4 +1,7 @@
 # TroubleTrack 🐞 API DOCS 📄
+<div align="center">
+	<code><img width="100" src="https://user-images.githubusercontent.com/25181517/121405754-b4f48f80-c95d-11eb-8893-fc325bde617f.png" alt=".NET Core" title=".NET Core"/></code>
+</div>
 The TroubleTrack API provides tools, and resources that enable you to report, update and track errors related to frontend development of your projects.
 # Build
 To build this project on Dotnet 8 core runtime you should make sure these required dependencies are listed in the *.cproj* file:
@@ -311,9 +314,9 @@ Response
 
 
 
-## Disclaimer: this is a test project and not developed with production in mind. Functionalities (even thought very simple) has not been tested by TDD, For any further questions regarding under the hood and api architechture please contact the author.
+#### Disclaimer: this project is not developed with production in mind. Functionalities (even thought very simple) has not been tested by TDD, For any further questions regarding under the hood and api architechture please contact the author.
 
-# Author
+## Author
 Anis Djaidja
 
 IT engineer
